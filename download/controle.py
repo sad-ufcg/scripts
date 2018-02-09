@@ -9,6 +9,14 @@ HEADERS=[("Host", "pre.ufcg.edu.br:8443"),
 		 ("Upgrade-Insecure-Requests", "1")]
 
 
+def base(codigo, turma, comando):
+    data = {"command": comando,
+        "codigo": codigo,
+        "turma": turma
+        }
+    return data
+
+# processar: <br><span class='text-danger'>O campo <strong>Assunto</strong> deve possuir pelo menos 20 caracteres.</span></td>
 def chamada(data, jsessionid=None):
     headers = [("Cookie", "JSESSIONID=" + jsessionid)] + HEADERS if jsessionid else HEADERS
     site="https://pre.ufcg.edu.br:8443/ControleAcademicoOnline/Controlador"
@@ -21,6 +29,7 @@ def chamada(data, jsessionid=None):
 
 def login(siape, senha, tipo="Professor"):
     f = chamada(_data_login(siape, senha, tipo))
+    print(f.read())
     for x in f.info()['Set-Cookie'].split(';'):
         if x.startswith("JSESSIONID"):
             return x.split('=')[1]

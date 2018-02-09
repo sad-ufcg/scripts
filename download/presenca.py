@@ -1,59 +1,48 @@
+import csv
+from getpass import getpass
 import math
-import urllib.request
-import urllib.parse
 
-#115211402,5.8,8.497916667,2.6,4.766666667,5.4,3.6
-
-codigo = "1411168"
-turma = "02"
-
-data = {"command": "ProfessorTurmaNotasConfirmar",
-	    "codigo": codigo,
-	    "turma": turma,
-	    "notas": "4",
-	    "numNotas": "4",
-	    "peso1":"27",
-	    "peso2":"27",
-	    "peso3":"26",
-	    "peso4":"20"
-		}
-		
-conv = lambda y: ("%.1f" % (math.ceil(10 * float(y)) / 10)).replace('.', ',')
-
-for line in open('p2.csv').readlines():
-	line = line.strip()
-	matr, n1, n2, n3, n4, f = line.split(',')
-	if n1:
-		data["n1_" + matr] = conv(n1)
-	if n2:
-		data["n2_" + matr] = conv(n2)
-	if n3:
-		data["n3_" + matr] = conv(n3)
-	if n4:
-		data["n4_" + matr] = conv(n4)
-	if f:
-		data["f_" + matr] = conv(f)
-
-print(data)
-
-#exit()
-
-#data = {"command=ProfessorTurmaNotasConfirmar&codigo=1411181&turma=03&notas=4&numNotas=4&peso1=20&peso2=28&peso3=32&peso4=20&n1_115211402=5"%"2C8&n2_115211402=8"%"2C5&n3_115211402=2"%"2C6&n4_115211402=4"%"2C8&f_115211402=3"%"2C6&n1_115210091=&n2_115210091=&n3_115210091=&n4_115210091=&f_115210091=&n1_115210534=&n2_115210534=&n3_115210534=&n4_115210534=&f_115210534=&n1_115210213=&n2_115210213=&n3_115210213=&n4_115210213=&f_115210213=&n1_115210195=&n2_115210195=&n3_115210195=&n4_115210195=&f_115210195=&n1_115210590=&n2_115210590=&n3_115210590=&n4_115210590=&f_115210590=&n1_115210834=&n2_115210834=&n3_115210834=&n4_115210834=&f_115210834=&n1_115210182=&n2_115210182=&n3_115210182=&n4_115210182=&f_115210182=&n1_115210827=&n2_115210827=&n3_115210827=&n4_115210827=&f_115210827=&n1_115211201=&n2_115211201=&n3_115211201=&n4_115211201=&f_115211201=&n1_115210941=&n2_115210941=&n3_115210941=&n4_115210941=&f_115210941=&n1_115210399=&n2_115210399=&n3_115210399=&n4_115210399=&f_115210399=&n1_115211549=&n2_115211549=&n3_115211549=&n4_115211549=&f_115211549=&n1_115210412=&n2_115210412=&n3_115210412=&n4_115210412=&f_115210412=&n1_115210873=&n2_115210873=&n3_115210873=&n4_115210873=&f_115210873=&n1_115210700=&n2_115210700=&n3_115210700=&n4_115210700=&f_115210700=&n1_115210298=&n2_115210298=&n3_115210298=&n4_115210298=&f_115210298=&n1_115211239=&n2_115211239=&n3_115211239=&n4_115211239=&f_115211239=&n1_115210797=&n2_115210797=&n3_115210797=&n4_115210797=&f_115210797=&n1_115210869=&n2_115210869=&n3_115210869=&n4_115210869=&f_115210869=&n1_115211049=&n2_115211049=&n3_115211049=&n4_115211049=&f_115211049=&n1_115210934=&n2_115210934=&n3_115210934=&n4_115210934=&f_115210934=&n1_115210384=&n2_115210384=&n3_115210384=&n4_115210384=&f_115210384=&n1_115210757=&n2_115210757=&n3_115210757=&n4_115210757=&f_115210757=&n1_115211305=&n2_115211305=&n3_115211305=&n4_115211305=&f_115211305=&n1_115211466=&n2_115211466=&n3_115211466=&n4_115211466=&f_115211466=&n1_115211281=&n2_115211281=&n3_115211281=&n4_115211281=&f_115211281=&n1_115211312=&n2_115211312=&n3_115211312=&n4_115211312=&f_115211312=&n1_115210734=&n2_115210734=&n3_115210734=&n4_115210734=&f_115210734=&n1_115210050=&n2_115210050=&n3_115210050=&n4_115210050=&f_115210050=&n1_115210912=&n2_115210912=&n3_115210912=&n4_115210912=&f_115210912=&n1_115210597=&n2_115210597=&n3_115210597=&n4_115210597=&f_115210597=&n1_115210629=&n2_115210629=&n3_115210629=&n4_115210629=&f_115210629=&n1_115210445=&n2_115210445=&n3_115210445=&n4_115210445=&f_115210445="
-
-site="https://pre.ufcg.edu.br:8443/ControleAcademicoOnline/Controlador"
-headers=[("Cookie", "JSESSIONID=4E66C9D2066F9FCB12DD3064AC95D165"),
-		 ("Host", "pre.ufcg.edu.br:8443"),
-		 ("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0"),
-		 ("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"),
-		 ("Accept-Language", "en-US,en;q=0.5"),
-		 # ("Referer", "https://pre.ufcg.edu.br:8443/ControleAcademicoOnline/Controlador?command=ProfessorTurmaNotasEditar&codigo=1411181&turma=03"
-		 ("Upgrade-Insecure-Requests", "1")]
+import controle
 
 
-params = urllib.parse.urlencode(data)
-params = params.encode('ascii')
-opener = urllib.request.build_opener()
-opener.addheaders = headers
-f = opener.open(site, params)
-resp = open("resp.html", "wb")
-resp.write(f.read())
+def _processa_csv(csv_f, delimiter=';'):
+    # HEADER: ,1,2,3
+    # CONTROLE ACADEMICO: f1_matr, f2_matr, ..
+    pages = []
+    with open(csv_f, encoding='utf-8-sig', newline='') as csvfile:
+        notas_reader = csv.reader(csvfile, delimiter=delimiter, newline='')
+        header = next(notas_reader)
+        total_pages = int(int(header[-1]) / 10) + 1
+        pages = [{} for _ in range(total_pages)]
+        for linha in notas_reader:
+            matr = linha[0]
+            for f, n in zip(header[1:], linha[1:]):
+                current_page = int((int(f) - 1) / 10)
+                if n:
+                    pages[current_page]['f' + f + "_" + matr] = 'f'
+                else:
+                    pages[current_page]['f' + f + "_" + matr] = ''
+    return pages
+
+
+def processa_csv(codigo, turma, csv_f, delimiter=';'):
+    pages = _processa_csv(csv_f, delimiter)
+    for n, p in enumerate(pages):
+        data = controle.base(codigo, turma, 'ProfessorTurmaFrequenciaConfirmar')
+        data["p"] = n + 1
+        print(controle.chamada(data, jsessionid).read())
+
+
+# ICC: 1411001
+# LP2: 1411181
+# P2 : 1411168
+def main():
+    login_ = input("LOGIN: ")
+    senha_ = getpass("SENHA: ")
+    jsessionid = controle.login(login_, senha_)
+    processa_csv("1411168", "02", 'presenca.csv')
+    print(jsessionid)
+
+
+if __name__ == "__main__":
+    main()

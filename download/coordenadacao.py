@@ -44,14 +44,19 @@ def data_resumo(codigo, turma):
 
 def main():
     login_ = input("LOGIN: ")
-    senha_ = getpass()
+    senha_ = getpass("SENHA: ")
     jsessionid = controle.login(login_, senha_, "Coordenacao")
+    print(jsessionid)
     resultado_listagem = controle.chamada({"command": "CoordenacaoDisciplinasOfertadasListar"}, jsessionid).read()
-    disciplinas = processa(listagem)
+    disciplinas = processa(resultado_listagem)
+    open('disciplinas.html', 'wb').write(resultado_listagem)
+    print(disciplinas)
     for disciplina in disciplinas:
         alunos = resumo(disciplina, jsessionid)
+        open(disciplina.nome + " - " + disciplina.turma + ".html", 'wb').write(alunos)
         arquivo = open(disciplina.nome + " - " + disciplina.turma + ".csv", 'wb')
-        arquivo.write('\n'.join([str(x) for x in processa_resumo(open('coord-alunos.htm', 'rb').read())]))
+        for x in processa_resumo(alunos):
+            arquivo.write((str(x) + '\n').encode())
         arquivo.close()
 
 
@@ -79,14 +84,8 @@ def processa_resumo(html):
 
 
 def resumo(disciplina, jsessionid):
-    resultado_resumo = controle.chamada(data_resumo(disciplina.cod, disciplina.turma), jsessionid).read()
-    
-    pass
+    return controle.chamada(data_resumo(disciplina.cod, disciplina.turma), jsessionid).read()
 
 
 if __name__ == "__main__":
     main()
-    #disciplinas = processa(open('coord-turmas.htm', 'rb').read())
-    #disciplinas = processa(main())
-    #print('\n'.join([str(x) for x in disciplinas]))
-    #'\n'.join([str(x) for x in processa_resumo(open('coord-alunos.htm', 'rb').read())]))
